@@ -10,7 +10,7 @@ from pandas.io.json import json_normalize
 
 from ..tm_api_base import TransmartAPIBase
 from .query import Query
-from .data_structures import ObservationSet, ObservationSetHD, TreeNodes, PatientSets, Studies, StudyList
+from .data_structures import ObservationSet, ObservationSetHD, TreeNodes, PatientSets, Studies, StudyList, BioAnalyses
 
 
 class TransmartV2(TransmartAPIBase):
@@ -121,6 +121,37 @@ class TransmartV2(TransmartAPIBase):
             studies = studies.dataframe
 
         return studies
+
+    def get_bioanalyses(self):
+        """
+        Get all bioanalyses
+
+        :return: dataframe
+        """
+        q = Query(handle='/v2/bioanalyses')
+
+        bioAnalyses = BioAnalyses(self.query(q))
+
+        bioAnalyses = bioAnalyses.dataframe
+
+        return bioAnalyses
+
+    def get_gwas(self, bioanalysis, as_dataframe=False):
+        """
+        Get GWAS data.
+
+        :param bioanalysis: bioanalysis id
+        :param as_dataframe: If True, convert json response to dataframe
+        :return: dataframe or direct json
+        """
+        q = Query(handle='/v2/gwas/'+str(bioanalysis))
+
+        gwas = self.query(q)
+
+        if as_dataframe:
+            gwas = json_normalize(gwas)
+
+        return gwas
 
     def get_concepts(self, study, hal=False):
         raise NotImplementedError("Call not available for API V2.")

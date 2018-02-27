@@ -92,6 +92,13 @@ class Studies:
         self.dataframe = json_normalize(json['studies'])
 
 
+class BioAnalyses:
+
+    def __init__(self, json):
+        self.json = json
+        self.dataframe = json_normalize(json['bioanalyses'])
+
+
 class StudyList:
 
     def __init__(self, study_list):
